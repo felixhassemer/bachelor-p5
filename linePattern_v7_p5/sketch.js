@@ -15,7 +15,7 @@ var choose = {
 }
 
 // Initializes all patterns
-var patterns;
+var patterns = new Array(2);
 
 var a = {   // ARRAY
   key: [],
@@ -67,7 +67,7 @@ function setup() {
   u.h = int(random(u.hMin, u.hMax));
 
   // INIT ARRAY
-  for (var i=0; i<2; i++) {
+  for (var i=0; i<patterns.length; i++) {
     patterns[i].start = random(100000);
   }
 
@@ -107,8 +107,12 @@ function draw() {
     u.w = round(dist(p.x, p.y, width - border*2, p.y));
   }
   // console.log(vArray, kArray);
-  var sorted = sort(vArray, [vArray.length]);
-  console.log(vArray, kArray);
+  var sorted = patterns;
+  sorted = sorted.sort(function(a, b){
+    return a.value-b.value
+  })
+  // sorted = patterns.sort(function(a, b){return a-b});
+  console.log(sorted);
   chooseFunction();
 
   // Paragraph Overflow or move X
@@ -168,6 +172,7 @@ function chooseFunction() {
 function setPatternNoise() {
   for (var i=0; i<patterns.length; i++) {
     patterns[i].value = map(noise(n.y.off + patterns[i].start), 0, 1, 0, 100);
+    console.log(patterns[i].value);
   }
 }
 
