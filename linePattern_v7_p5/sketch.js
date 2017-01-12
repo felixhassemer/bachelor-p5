@@ -25,7 +25,11 @@ var choose = {
 // PATTERNS
 var names = [ "diagLine",
               "triangleDraw",
-              "circles"];
+              "circle",
+              "diagLine2",
+              "horizontLines",
+              // "sineWave",
+              "space"];
 var patterns = [];
 
 // ARRAY
@@ -37,12 +41,20 @@ var a = {
 var n = {
   x : {
     off: 0,
-    incr: 0.01
+    incr: 0.04
   },
   y : {
     off: 0,
-    incr: 0.05
+    incr: 0.001
   }
+}
+
+var sine = {
+  angle: 0,
+  scale: 0,
+  off: 0,
+  offincr: 0,
+  incr: 3.14/14
 }
 
 // POSITION
@@ -63,10 +75,11 @@ var s = {
   weight: 3,
   off: 0,
   cap: 0,
-  join: 0
+  join: 0,
+  choose: 0
 }
 
-// ----------------------------------------------------------
+// ------------------------------------ ----------------------
 
 function setup() {
   initPatterns();
@@ -118,9 +131,6 @@ function draw() {
     return a.value-b.value
   })
 
-  // console.log(patterns[0].name, patterns[1].name);
-  // console.log(patterns[0].value, patterns[1].value);
-
   // selects Function according to pattern.name
   chooseFunction();
 
@@ -170,6 +180,26 @@ function chooseFunction() {
       }
       if (patterns[i].name == "triangleDraw") {
         triangleDraw();
+        foundOne = true;
+      }
+      if (patterns[i].name == "circle") {
+        circle();
+        foundOne = true;
+      }
+      if (patterns[i].name == "diagLine2") {
+        diagLine2();
+        foundOne = true;
+      }
+      if (patterns[i].name == "horizontLines") {
+        horizontLines();
+        foundOne = true;
+      }
+      if (patterns[i].name == "sineWave") {
+        sineWave();
+        foundOne = true;
+      }
+      if (patterns[i].name == "space") {
+        space();
         foundOne = true;
       }
     }
@@ -239,11 +269,104 @@ function triangleDraw() {
 }
 
 function circle() {
-  local.choose = round(random(1));
+  choose.local = round(random(1));
   // Local VARIABLES
   var circleSize = 0;
+  var half = {
+    off: radians(map(round(random(8)), 0, 8, 0, 360)),  // offset rotation in 45° steps
+    start: radians(0),  // set arc to 180°
+    end: radians(180)
+  }
 
   // STYLING
-  var sChoose = round(random(1));
-  if (sChoose == 0)
+  s.choose = round(random(1));
+  if (s.choose == 0) {
+    noStroke();
+    fill(col.f);
+  } else {
+    noFill();
+    stroke(col.s);
+    strokeWeight(s.weight);
+    strokeCap(s.cap);
+    strokeJoin(s.join);
+  }
+
+  // determine size of circle
+  if (u.w < u.h) {
+    circleSize = random(u.w/8, u.w);
+  } else {
+    circleSize = random(u.h/8, u.h);
+  }
+
+  // PATTERN
+  if (choose.local == 0) {
+    ellipse(p.x+u.w/2, p.y+u.h/2, circleSize, circleSize);
+  } else {
+    arc(p.x+u.w/2, p.y+u.h/2, circleSize, circleSize, half.start+half.off, half.end+half.off, PIE);
+  }
 }
+
+function diagLine2() {
+  choose.local = round(random(1));
+
+  // STYLING
+  stroke(col.s);
+  strokeWeight(s.weight);
+  strokeCap(s.cap);
+  strokeJoin(s.join);
+  noFill();
+
+  // PATTERN
+  beginShape();
+  if (choose.local == 0) {
+    vertex(p.x, p.y+s.off);
+    vertex(p.x+u.w/3, p.y+u.h/3);
+    vertex(p.x+u.w-u.w/3, p.y+u.h/3);
+    vertex(p.x+u.w, p.y+u.h-s.off);
+  } else {
+    vertex(p.x+u.w, p.y+s.off);
+    vertex(p.x+u.w-u.w/3, p.y+u.h-u.h/3);
+    vertex(p.x+u.w/3, p.y+u.h-u.h/3);
+    vertex(p.x, p.y+u.h-s.off);
+  }
+  endShape();
+}
+
+function horizontLines() {
+  // local VARIABLES
+  var lineMax = round(random(3, 6));
+  // STYLING
+  stroke(col.s);
+  strokeWeight(s.weight);
+  strokeCap(PROJECT);
+  strokeJoin(s.join);
+  noFill();
+
+  // PATTERN
+  for (let i=1; i<lineMax; i++) {
+    line(p.x+s.off, p.y+i*u.h/(lineMax+1), p.x+u.w-s.off, p.y+i*u.h/(lineMax+1));
+  }
+}
+
+function sineWave() {
+  // STYLING
+  stroke(col.s);
+  strokeWeight(s.weight);
+  strokeCap(s.cap);
+  strokeJoin(s.join);
+  noFill();
+
+  // PATTERN
+  beginShape();
+  for (let i=0; i<u.w; i++) {
+    sine.scale = map(noise(sine.off+6000), 0, 1, 0, u.h/2);
+    sine.incr = map(noise(sine.off), 0, 1, PI/180, PI/6);
+    var tempY = u.h/2 + (sin(sine.angle) * sine.scale);
+    vertex(p.x+i, p.y+tempY);
+    // increment noise for sine
+    sine.angle += sine.incr;
+    sine.off += sine.offincr;
+  }
+}
+
+function space() {}
