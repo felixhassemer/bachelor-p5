@@ -1,5 +1,12 @@
+// enable strict mode
+"use strict";
+
 // VARIABLES
-var u = {   // UNITS
+// ----------------------------------------------------------
+var border = 0;
+
+// UNITS
+var u = {
   wMin: 10,
   wMax: 140,
   hMin: 10,
@@ -8,21 +15,26 @@ var u = {   // UNITS
   h: 0
 }
 
+// selects PATTERNS
 var choose = {
   main: 0,
   max: 0,
   local: 0
 }
 
-// Initializes all patterns
-var patterns = new Array(2);
+// PATTERNS
+var names = [ "diagLine",
+              "triangleDraw",
+              "circles"];
+var patterns = [];
 
-var a = {   // ARRAY
-  key: [],
+// ARRAY
+var a = {
   val: []
 }
 
-var n = {   // NOISE
+// NOISE
+var n = {
   x : {
     off: 0,
     incr: 0.01
@@ -33,20 +45,21 @@ var n = {   // NOISE
   }
 }
 
-var p = { // POSITION
+// POSITION
+var p = {
   x: 0,
   y: 0
 }
 
-var border = 0;
-var bgndColor = 255;
-
-var f = {   // FILL
-  color: 0
+// COLOR
+var col = {
+  bgnd: 255,
+  f: 0,
+  s: 0
 }
 
-var s = {   // STROKE
-  color: 0,
+// STROKE
+var s = {
   weight: 3,
   off: 0,
   cap: 0,
@@ -58,7 +71,7 @@ var s = {   // STROKE
 function setup() {
   initPatterns();
 
-  // INIT
+  // initialize Variables
   s.off = s.weight/2;
   s.cap = ROUND;
   s.join = ROUND;
@@ -66,39 +79,32 @@ function setup() {
   u.w = int(random(u.wMin, u.wMax));
   u.h = int(random(u.hMin, u.hMax));
 
-  // INIT ARRAY
-  for (var i=0; i<patterns.length; i++) {
-    patterns[i].start = random(100000);
-  }
-
   // SETTINGS
-  createCanvas(800,800);
-  frameRate(10);
-  background(bgndColor);
+  createCanvas(800,800, [P2D]);
+  frameRate(20);
+  background(col.bgnd);
 }
 
 // ----------------------------------------------------------
 
 function draw() {
+  // clear sides with col.bgnd and transform
+  clearSides();
+
   // Assign noise to Array values
   setPatternNoise();
 
   // copy values from patterns in array
-  var vArray = new Array(patterns.length);
-  for (var i=0; i < patterns.length; i++) {
-    vArray[i] = patterns[i].value;
-  }
-  var kArray = new Array(patterns.length);
-  for (var i=0; i < patterns.length; i++) {
-    kArray[i] = patterns[i].name;
+  a.val = new Array(patterns.length);
+  for (let i=0; i < patterns.length; i++) {
+    a.val[i] = patterns[i].value;
   }
 
   // map noise to choose function
-  choose.max = max(vArray);
+  choose.max = max(a.val);
   choose.main = map(noise(n.x.off), 0, 1, 0, choose.max);
 
-  // clear sides with bgndColor and transform
-  clearSides();
+
 
   // set Unit Width to random or until margin
   if (dist(p.x, p.y, width - border*2, p.y) > u.wMax) {
@@ -106,13 +112,16 @@ function draw() {
   } else {
     u.w = round(dist(p.x, p.y, width - border*2, p.y));
   }
-  // console.log(vArray, kArray);
-  var sorted = patterns;
-  sorted = sorted.sort(function(a, b){
+
+  // sort patterns by value
+  patterns.sort(function(a, b){
     return a.value-b.value
   })
-  // sorted = patterns.sort(function(a, b){return a-b});
-  console.log(sorted);
+
+  // console.log(patterns[0].name, patterns[1].name);
+  // console.log(patterns[0].value, patterns[1].value);
+
+  // selects Function according to pattern.name
   chooseFunction();
 
   // Paragraph Overflow or move X
@@ -136,22 +145,23 @@ function draw() {
 // CORE FUNCTIONS
 
 function initPatterns() {
-  patterns = [
-    this[0] = {
-      name: "diagLine", // used to execute the function
-      value: 0,   // mapped noise value of the pattern
-      start: 0    // start will be set to random(100000)
-    },
-    this[1] = {
-      name: "triangleDraw", // used to execute the function
-      value: 0, // mapped noise value of the pattern
-      start: 0  // start will be set to random(100000)
+  for (let i=0; i<names.length; i++) {
+    patterns[i] = {
+      name: names[i],
+      value: 0,
+      start: random(100000)
     }
-  ]
+  }
+}
+
+function setPatternNoise() {
+  for (let i=0; i<patterns.length; i++) {
+    patterns[i].value = map(noise(n.y.off + patterns[i].start), 0, 1, 0, 100);
+  }
 }
 
 function chooseFunction() {
-  for (var i=0; i < patterns.length; i++) {
+  for (let i=0; i < patterns.length; i++) {
     var foundOne = false;
     if (choose.main < patterns[i].value) {
       if (patterns[i].name == "diagLine") {
@@ -169,25 +179,18 @@ function chooseFunction() {
   }
 }
 
-function setPatternNoise() {
-  for (var i=0; i<patterns.length; i++) {
-    patterns[i].value = map(noise(n.y.off + patterns[i].start), 0, 1, 0, 100);
-    console.log(patterns[i].value);
-  }
-}
-
 function scrollScreen() {
   if (p.y + u.h >= height) {
-    copy(this, 0, 0, width-border*2, p.y, 0, -u.h, width-border*2, p.y);
-    fill(bgndColor);
+    copy(window, 0, 0, width-border*2, p.y, 0, -u.h, width-border*2, p.y);
+    fill(col.bgnd);
     noStroke();
-    rect(0 - border, p.y - u.h, width, u.hMax);
+    rect(0, p.y - u.h, width-border*2, u.hMax);
     p.y = p.y - int(u.h);
   }
 }
 
 function clearSides() {
-  fill(bgndColor);
+  fill(col.bgnd);
   noStroke();
   rect(0, 0, border, height);
   rect(width - border, 0, border, height);
@@ -199,7 +202,7 @@ function clearSides() {
 
 function diagLine() {
   // STYLING
-  stroke(s.color);
+  stroke(col.s);
   strokeWeight(s.weight);
   strokeCap(s.cap);
   strokeJoin(s.join);
@@ -219,11 +222,11 @@ function triangleDraw() {
 
   // STYLING
   if (choose.local < 2) {
-    fill(f.color);
+    fill(col.f);
     noStroke();
   } else {
     noFill();
-    stroke(s.color);
+    stroke(col.s);
     strokeWeight(s.weight);
   }
 
@@ -231,6 +234,16 @@ function triangleDraw() {
   if (choose.local == 0) {
     triangle(p.x, p.y, p.x+u.w, p.y, p.x, p.y+u.h);
   } else if (choose.local == 1) {
-    triangle(p.x+u.w, p.y, p.x+u.w, p.y+u.h, p.y, p.y+u.h);
+    triangle(p.x+u.w, p.y, p.x+u.w, p.y+u.h, p.x, p.y+u.h);
   }
+}
+
+function circle() {
+  local.choose = round(random(1));
+  // Local VARIABLES
+  var circleSize = 0;
+
+  // STYLING
+  var sChoose = round(random(1));
+  if (sChoose == 0)
 }
