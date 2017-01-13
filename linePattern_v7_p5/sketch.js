@@ -3,7 +3,7 @@
 
 // VARIABLES
 // ----------------------------------------------------------
-var border = 100;
+var border = 300;
 
 // UNITS
 var u = {
@@ -103,9 +103,6 @@ function setup() {
 // ----------------------------------------------------------
 
 function draw() {
-  // clear sides with col.bgnd and transform
-  // clearSides();
-
   // Assign noise to Array values
   setPatternNoise();
 
@@ -120,10 +117,10 @@ function draw() {
   choose.main = map(noise(n.x.off), 0, 1, 0, choose.max);
 
   // set Unit Width to random or until margin
-  if (dist(p.x, p.y, width - border*2, p.y) > u.wMax) {
+  if (dist(p.x, p.y, width, p.y) > u.wMax) {
     u.w = round(random(u.wMin, u.wMax));
   } else {
-    u.w = round(dist(p.x, p.y, width - border*2, p.y));
+    u.w = round(dist(p.x, p.y, width, p.y));
   }
 
   // sort patterns by value
@@ -135,7 +132,7 @@ function draw() {
   chooseFunction();
 
   // Paragraph Overflow or move X
-  if (p.x + u.w > width - border*2-1) {
+  if (p.x + u.w > width-1) {
     // random Unit Height
     p.x = 0;
     p.y += u.h;
@@ -219,20 +216,12 @@ function chooseFunction() {
 
 function scrollScreen() {
   if (p.y + u.h >= height) {
-    copy(window, 0, 0, width-border*2, p.y, 0, -u.h, width-border*2, p.y);
+    copy(window, 0, 0, width, p.y, 0, -u.h, width, p.y);
     fill(col.bgnd);
     noStroke();
-    rect(0, p.y - u.h, width-border*2, u.hMax);
+    rect(0, p.y - u.h, width, u.hMax);
     p.y = p.y - int(u.h);
   }
-}
-
-function clearSides() {
-  fill(col.bgnd);
-  noStroke();
-  rect(0, 0, border, height);
-  rect(width - border, 0, border, height);
-  translate(border, 0);
 }
 
 function windowResized() {
