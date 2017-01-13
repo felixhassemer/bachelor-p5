@@ -3,14 +3,14 @@
 
 // VARIABLES
 // ----------------------------------------------------------
-var border = 0;
+var border = 100;
 
 // UNITS
 var u = {
   wMin: 10,
-  wMax: 140,
+  wMax: 160,
   hMin: 10,
-  hMax: 160,
+  hMax: 180,
   w: 0,
   h: 0
 }
@@ -28,7 +28,9 @@ var names = [ "diagLine",
               "circle",
               "diagLine2",
               "horizontLines",
-              // "sineWave",
+              "lineFigures",
+              "sineWave",
+              "curves",
               "space"];
 var patterns = [];
 
@@ -53,7 +55,7 @@ var sine = {
   angle: 0,
   scale: 0,
   off: 0,
-  offincr: 0,
+  offincr: 0.005,
   incr: 3.14/14
 }
 
@@ -93,7 +95,7 @@ function setup() {
   u.h = int(random(u.hMin, u.hMax));
 
   // SETTINGS
-  createCanvas(800,800, [P2D]);
+  createCanvas(windowWidth-border, windowHeight);
   frameRate(20);
   background(col.bgnd);
 }
@@ -102,7 +104,7 @@ function setup() {
 
 function draw() {
   // clear sides with col.bgnd and transform
-  clearSides();
+  // clearSides();
 
   // Assign noise to Array values
   setPatternNoise();
@@ -112,12 +114,10 @@ function draw() {
   for (let i=0; i < patterns.length; i++) {
     a.val[i] = patterns[i].value;
   }
+  choose.max = max(a.val);
 
   // map noise to choose function
-  choose.max = max(a.val);
   choose.main = map(noise(n.x.off), 0, 1, 0, choose.max);
-
-
 
   // set Unit Width to random or until margin
   if (dist(p.x, p.y, width - border*2, p.y) > u.wMax) {
@@ -202,6 +202,14 @@ function chooseFunction() {
         space();
         foundOne = true;
       }
+      if (patterns[i].name == "curves") {
+        curves();
+        foundOne = true;
+      }
+      if (patterns[i].name == "lineFigures") {
+        lineFigures();
+        foundOne = true;
+      }
     }
     if (foundOne) {
       break;
@@ -225,6 +233,11 @@ function clearSides() {
   rect(0, 0, border, height);
   rect(width - border, 0, border, height);
   translate(border, 0);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth-border, windowHeight);
+  background(col.bgnd);
 }
 
 // ----------------------------------------------------------
@@ -265,6 +278,89 @@ function triangleDraw() {
     triangle(p.x, p.y, p.x+u.w, p.y, p.x, p.y+u.h);
   } else if (choose.local == 1) {
     triangle(p.x+u.w, p.y, p.x+u.w, p.y+u.h, p.x, p.y+u.h);
+  }
+}
+
+function curves() {
+  choose.local = round(random(7));
+
+  // STYLING
+  if (choose.local < 4) {
+    noFill();
+    stroke(col.s);
+    strokeWeight(s.weight);
+    strokeCap(s.cap);
+    strokeJoin(s.join);
+  } else {
+    fill(col.f);
+    noStroke();
+  }
+
+  // PATTERN
+  if (choose.local == 0) {
+    bezier( p.x, p.y+u.h/2, // vertex mid-left
+            p.x+u.w/2, p.y+u.h/2,
+            p.x+u.w/2, p.y+u.h-s.off,
+            p.x+u.w, p.y+u.h-s.off); //vertex down-right
+  } else if (choose.local == 1) {
+    bezier( p.x+u.w, p.y+u.h/2, // vertex mid-right
+            p.x+u.w/2, p.y+u.h/2,
+            p.x+u.w/2, p.y+u.h-s.off,
+            p.x, p.y+u.h-s.off); //vertex down-left
+  } else if (choose.local == 2) {
+    bezier( p.x+u.w, p.y+u.h/2, // vertex mid-right
+            p.x+u.w/2, p.y+u.h/2,
+            p.x+u.w/2, p.y+s.off,
+            p.x, p.y+s.off); // vertex up-left
+  } else if (choose.local == 3) {
+    bezier( p.x, p.y+u.h/2, // vertex mid-left
+            p.x+u.w/2, p.y+u.h/2,
+            p.x+u.w/2, p.y+s.off,
+            p.x+u.w, p.y+s.off); // vertex up-right
+  } else if (choose.local == 4) {
+    // filled shape
+    beginShape();
+    vertex (p.x, p.y+u.h/2); // vertex mid-left
+    bezierVertex( p.x+u.w/2, p.y+u.h/2,
+                  p.x+u.w/2, p.y+u.h,
+                  p.x+u.w, p.y+u.h); // vertex down-right
+    bezierVertex( p.x+u.w, p.y+u.h,
+                  p.x, p.y+u.h,
+                  p.x, p.y+u.h); // vertex down-left
+    endShape();
+  } else if (choose.local == 5) {
+    // filled shape
+    beginShape();
+    vertex (p.x+u.w, p.y+u.h/2); // vertex mid-right
+    bezierVertex( p.x+u.w/2, p.y+u.h/2,
+                  p.x+u.w/2, p.y+u.h,
+                  p.x, p.y+u.h); // vertex down-left
+    bezierVertex( p.x, p.y+u.h,
+                  p.x+u.w, p.y+u.h,
+                  p.x+u.w, p.y+u.h); // vertex down-right
+    endShape();
+  } else if (choose.local == 6) {
+    // filled shape
+    beginShape();
+    vertex (p.x+u.w, p.y+u.h/2); // vertex mid-right
+    bezierVertex( p.x+u.w/2, p.y+u.h/2,
+                  p.x+u.w/2, p.y,
+                  p.x, p.y); // vertex up-left
+    bezierVertex( p.x, p.y,
+                  p.x+u.w, p.y,
+                  p.x+u.w, p.y); // vertex up-right
+    endShape();
+  } else if (choose.local == 7) {
+    // filled shape
+    beginShape();
+    vertex (p.x, p.y+u.h/2); // vertex mid-left
+    bezierVertex( p.x+u.w/2, p.y+u.h/2,
+                  p.x+u.w/2, p.y,
+                  p.x+u.w, p.y); // vertex up-right
+    bezierVertex( p.x+u.w, p.y,
+                  p.x, p.y,
+                  p.x, p.y); // vertex up-left
+    endShape();
   }
 }
 
@@ -343,9 +439,62 @@ function horizontLines() {
   noFill();
 
   // PATTERN
-  for (let i=1; i<lineMax; i++) {
+  for (let i=1; i<=lineMax; i++) {
     line(p.x+s.off, p.y+i*u.h/(lineMax+1), p.x+u.w-s.off, p.y+i*u.h/(lineMax+1));
   }
+}
+
+function lineFigures() {
+  choose.local = round(random(1));
+
+  // local variables
+  var ln = {
+    min: 3,
+    max: 7,
+    num: 0,
+    choose: 0
+  }
+  var temp = {
+    x: 0,
+    y: 0
+  }
+
+  // set line count
+  ln.num = round(random(ln.min, ln.max));
+
+  // STYLING
+  noFill();
+  stroke(col.s);
+  strokeWeight(s.weight);
+  strokeCap(s.cap);
+  strokeJoin(s.join);
+
+  // draw Linefigure
+  beginShape();
+  for (let i=0; i< ln.num; i++) {
+    if (choose.local == 0) {
+      // x either 0 or u.w
+      ln.choose = round(random(1));
+      if (ln.choose == 0) {
+        temp.x = u.w/6;
+      } else {
+        temp.x = u.w-u.w/6;
+      }
+      temp.y = round(random(u.h));
+    } else {
+      // y either 0 or u.h
+      ln.choose = round(random(1));
+      if(ln.choose == 0) {
+        temp.y = u.h/6;
+      } else {
+        temp.y = u.h - u.h/6;
+      }
+      temp.x = round(random(u.w));
+    }
+    // draw vertices
+    vertex(p.x + temp.x, p.y + temp.y);
+  }
+  endShape();
 }
 
 function sineWave() {
@@ -367,6 +516,7 @@ function sineWave() {
     sine.angle += sine.incr;
     sine.off += sine.offincr;
   }
+  endShape();
 }
 
 function space() {}
