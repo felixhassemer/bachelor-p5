@@ -23,7 +23,8 @@ var choose = {
 }
 
 // PATTERNS
-var names = [ "diagLine",
+var names = [ 
+              "diagLine",
               "triangleDraw",
               "circle",
               "diagLine2",
@@ -31,7 +32,8 @@ var names = [ "diagLine",
               "lineFigures",
               "sineWave",
               "curves",
-              "space"];
+              "space"
+            ];
 var patterns = [];
 
 // ARRAY
