@@ -11,12 +11,12 @@ var ln = {
 var x, y;
 var cycle;
 var choose;
-var grid.size = 200;
 
 var grid = {
   x: 0,
   y: 0,
-  size: 200
+  size: 0,
+  num: 3
 }
 
 // c is Canvas
@@ -33,7 +33,16 @@ var col = {
 }
 
 function setup() {
-  createCanvas(800, 800);
+  // make canvas square
+  if (windowWidth < windowHeight) {
+    c.height = windowWidth-windowWidth/5;
+    c.width = c.height;
+  } else {
+    c.width = windowHeight-windowHeight/5;
+    c.height = c.width;
+  }
+  createCanvas(c.width, c.height);
+  grid.size = canvas.width / grid.num;
   frameRate(1);
   background(col.bgnd);
   noFill();
@@ -43,12 +52,12 @@ function setup() {
 }
 
 function draw() {
+  translate(grid.size/4, grid.size/4);
   background(col.bgnd);
 
   // draw the linefigures
-  for (let grid.x=0; grid.x < 800; grid.x += grid.size) {
-    for (let grid.y=0; grid.y < 800; grid.y += grid.size) {
-      var circleSize = round(random(15, 50));
+  for (grid.x=0; grid.x < c.width; grid.x += grid.size) {
+    for (grid.y=0; grid.y < c.height; grid.y += grid.size) {
       beginShape();
       ln.num = int(random(ln.min, ln.max));
 
@@ -81,9 +90,22 @@ function draw() {
 
       // draw circle
       fill(col.f);
+      var circleSize = round(random(15, 50));
       ellipse(grid.x + random(25, 75), grid.y + random(25, 75), circleSize, circleSize);
       noFill();
     }
   }
+}
 
+function windowResized() {
+  // make canvas square
+  if (windowWidth < windowHeight) {
+    c.height = windowWidth-windowWidth/5;
+    c.width = c.height;
+  } else {
+    c.width = windowHeight-windowHeight/5;
+    c.height = c.width;
+  }
+  resizeCanvas(c.width, c.height);
+  background(col.bgnd);
 }
