@@ -11,7 +11,13 @@ var ln = {
 var x, y;
 var cycle;
 var choose;
-var gridSize = 200;
+var grid.size = 200;
+
+var grid = {
+  x: 0,
+  y: 0,
+  size: 200
+}
 
 // c is Canvas
 var c = {
@@ -40,8 +46,8 @@ function draw() {
   background(col.bgnd);
 
   // draw the linefigures
-  for (let gridX=0; gridX < 800; gridX += gridSize) {
-    for (let gridY=0; gridY < 800; gridY += gridSize) {
+  for (let grid.x=0; grid.x < 800; grid.x += grid.size) {
+    for (let grid.y=0; grid.y < 800; grid.y += grid.size) {
       var circleSize = round(random(15, 50));
       beginShape();
       ln.num = int(random(ln.min, ln.max));
@@ -68,14 +74,14 @@ function draw() {
           x = round(random(100));
         }
         // draw the vertices
-        vertex(gridX + x, gridY + y);
+        vertex(grid.x + x, grid.y + y);
       }
 
       endShape();
 
       // draw circle
       fill(col.f);
-      ellipse(gridX + random(25, 75), gridY + random(25, 75), circleSize, circleSize);
+      ellipse(grid.x + random(25, 75), grid.y + random(25, 75), circleSize, circleSize);
       noFill();
     }
   }
