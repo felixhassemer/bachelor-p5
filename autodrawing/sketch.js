@@ -46,8 +46,8 @@ function setup() {
 
 function draw() {
   if (frameCount % 60 == 1) {
-    target.x = random(c.width-border) + border;
-    target.y = random(c.height-border) + border;
+    target.x = random(c.width-border*2) + border;
+    target.y = random(c.height-border*2) + border;
   }
 
   var dx = target.x - x;
