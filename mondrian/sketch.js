@@ -6,7 +6,7 @@ var rect1, rect2, rect3;
 function setup() {
   // calculate canvassize
   canvasW = windowWidth-windowWidth/4;
-  canvasH = windowWidth-windowWidth/4;
+  canvasH = windowHeight-windowHeight/4;
 
   // rectangle sizes
   rect1 = canvasW/2;
@@ -34,7 +34,7 @@ function draw() {
 function windowResized() {
     // calculate canvassize
   canvasW = windowWidth-windowWidth/4;
-  canvasH = windowWidth-windowWidth/4;
+  canvasH = windowHeight-windowHeight/4;
 
   resizeCanvas(canvasW, canvasH);
 
