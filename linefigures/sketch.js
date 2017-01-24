@@ -15,8 +15,8 @@ var choose;
 
 // u is Unit
 var u = {
-  w: 150,
-  h: 150
+  w: 100,
+  h: 100
 }
 
 // c is for canvas
@@ -33,7 +33,7 @@ var grid = {
   x: 0,
   y: 0,
   step: 0,
-  num: 1
+  num: 2
 }
 
 // color variables
@@ -69,6 +69,9 @@ function draw() {
   grid.stopX = c.width - c.width/6;
   grid.stopY = c.height - c.height/6;
   grid.step = (grid.stopX-grid.startX-u.w) / grid.num;
+  if ((grid.step < u.w) || (grid.step < u.h)) {
+    grid.step = (u.w+u.h)/2
+  }
 
   // draw the linefigures
   for (grid.x=grid.startX; grid.x < grid.stopX; grid.x += grid.step) {
