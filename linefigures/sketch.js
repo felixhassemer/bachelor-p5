@@ -8,21 +8,26 @@ var ln = {
   num: 0
 }
 
+
 var x, y;
 var cycle;
 var choose;
 
-var grid = {
-  x: 0,
-  y: 0,
-  size: 0,
-  num: 3
+// u is Unit
+var u = {
+  w: 150,
+  h: 150
 }
 
-// c is Canvas
-var c = {
-  width: 600,
-  height: 600
+var grid = {
+  startX: 0,
+  startY: 0,
+  stopX: 0,
+  stopY: 0,
+  x: 0,
+  y: 0,
+  step: 0,
+  num: 2
 }
 
 // color variables
@@ -35,16 +40,18 @@ var col = {
 function setup() {
   // make canvas square
   if (windowWidth < windowHeight) {
-    c.height = windowWidth-windowWidth/5;
-    c.width = c.height;
+    canvas.height = windowWidth-windowWidth/5;
+    canvas.width = canvas.height;
   } else {
-    c.width = windowHeight-windowHeight/5;
-    c.height = c.width;
+    canvas.width = windowHeight-windowHeight/5;
+    canvas.height = canvas.width;
   }
-  createCanvas(c.width, c.height);
-  grid.size = canvas.width / grid.num;
+
+  createCanvas(canvas.width, canvas.height);
+
+
+
   frameRate(1);
-  background(col.bgnd);
   noFill();
   stroke(col.s);
   strokeWeight(3);
@@ -52,12 +59,18 @@ function setup() {
 }
 
 function draw() {
-  translate(grid.size/4, grid.size/4);
   background(col.bgnd);
 
+  // initialize Variables
+  grid.startX = canvas.width/6;
+  grid.startY = canvas.height/6;
+  grid.stopX = canvas.width - canvas.width/6;
+  grid.stopY = canvas.height - canvas.height/6;
+  grid.step = (grid.stopX-grid.startX-u.w) / grid.num;
+
   // draw the linefigures
-  for (grid.x=0; grid.x < c.width; grid.x += grid.size) {
-    for (grid.y=0; grid.y < c.height; grid.y += grid.size) {
+  for (grid.x=grid.startX; grid.x < grid.stopX; grid.x += grid.step) {
+    for (grid.y=grid.startY; grid.y < grid.stopY; grid.y += grid.step) {
       beginShape();
       ln.num = int(random(ln.min, ln.max));
 
@@ -69,18 +82,18 @@ function draw() {
           if (choose == 0) {
             x = 0;
           } else {
-            x = 100;
+            x = u.w;
           }
-          y = round(random(100));
+          y = round(random(u.h));
         } else {
           // make y either 0 or 100
           choose = round(random(0, 1));
           if (choose == 0) {
             y = 0;
           } else {
-            y = 100;
+            y = u.h;
           }
-          x = round(random(100));
+          x = round(random(u.w));
         }
         // draw the vertices
         vertex(grid.x + x, grid.y + y);
@@ -90,8 +103,8 @@ function draw() {
 
       // draw circle
       fill(col.f);
-      var circleSize = round(random(15, 50));
-      ellipse(grid.x + random(25, 75), grid.y + random(25, 75), circleSize, circleSize);
+      var circleSize = round(random(15, u.w/2));
+      ellipse(grid.x + random(u.w/4, u.w-u.w/4), grid.y + random(u.h/4, u.h-u.h/4), circleSize, circleSize);
       noFill();
     }
   }
@@ -100,12 +113,14 @@ function draw() {
 function windowResized() {
   // make canvas square
   if (windowWidth < windowHeight) {
-    c.height = windowWidth-windowWidth/5;
-    c.width = c.height;
+    canvas.height = windowWidth-windowWidth/5;
+    canvas.width = canvas.height;
   } else {
-    c.width = windowHeight-windowHeight/5;
-    c.height = c.width;
+    canvas.width = windowHeight-windowHeight/5;
+    canvas.height = canvas.width;
   }
-  resizeCanvas(c.width, c.height);
+
+  resizeCanvas(canvas.width, canvas.height);
+
   background(col.bgnd);
 }
