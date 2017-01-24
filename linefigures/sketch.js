@@ -19,6 +19,12 @@ var u = {
   h: 150
 }
 
+// c is for canvas
+var c = {
+  width: 0,
+  height: 0
+}
+
 var grid = {
   startX: 0,
   startY: 0,
@@ -27,7 +33,7 @@ var grid = {
   x: 0,
   y: 0,
   step: 0,
-  num: 2
+  num: 1
 }
 
 // color variables
@@ -40,17 +46,13 @@ var col = {
 function setup() {
   // make canvas square
   if (windowWidth < windowHeight) {
-    canvas.height = windowWidth-windowWidth/5;
-    canvas.width = canvas.height;
+    c.height = windowWidth-windowWidth/5;
+    c.width = c.height;
   } else {
-    canvas.width = windowHeight-windowHeight/5;
-    canvas.height = canvas.width;
+    c.width = windowHeight-windowHeight/5;
+    c.height = c.width;
   }
-
-  createCanvas(canvas.width, canvas.height);
-
-
-
+  createCanvas(c.width, c.height);
   frameRate(1);
   noFill();
   stroke(col.s);
@@ -62,10 +64,10 @@ function draw() {
   background(col.bgnd);
 
   // initialize Variables
-  grid.startX = canvas.width/6;
-  grid.startY = canvas.height/6;
-  grid.stopX = canvas.width - canvas.width/6;
-  grid.stopY = canvas.height - canvas.height/6;
+  grid.startX = c.width/6;
+  grid.startY = c.height/6;
+  grid.stopX = c.width - c.width/6;
+  grid.stopY = c.height - c.height/6;
   grid.step = (grid.stopX-grid.startX-u.w) / grid.num;
 
   // draw the linefigures
@@ -113,14 +115,12 @@ function draw() {
 function windowResized() {
   // make canvas square
   if (windowWidth < windowHeight) {
-    canvas.height = windowWidth-windowWidth/5;
-    canvas.width = canvas.height;
+    c.height = windowWidth-windowWidth/5;
+    c.width = c.height;
   } else {
-    canvas.width = windowHeight-windowHeight/5;
-    canvas.height = canvas.width;
+    c.width = windowHeight-windowHeight/5;
+    c.height = c.width;
   }
-
-  resizeCanvas(canvas.width, canvas.height);
-
+  resizeCanvas(c.width, c.height);
   background(col.bgnd);
 }
