@@ -49,10 +49,10 @@ function setup() {
 function draw() {
   translate(canvas.width/2, canvas.height/2);
 
-  s.vol = s.amp.getLevel();
-  obj.size = map(s.vol, 0, 1, 0, 180);
+  // map audio level to size - setSize(max)
+  obj.setSize(200);
 
-  // calculate Target point setTarget(border)
+  // calculate Target point - setTarget(border)
   obj.setTarget(80);
 
   // easing
@@ -74,6 +74,11 @@ var obj = {
   xTarget: 0,
   yTarget: 0,
   size: 0,
+
+  setSize: function(max) {
+    s.vol = s.amp.getLevel();
+    obj.size = map(s.vol, 0, 1, 0, max);
+  },
 
   ease: function(easing) {
     obj.xPos += (obj.xTarget-obj.xPos) * easing;
