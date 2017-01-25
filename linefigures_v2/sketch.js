@@ -3,8 +3,8 @@
 // global
 // line variables
 var ln = {
-  min: 3,
-  max: 7,
+  min: 2,
+  max: 6,
   num: 0
 }
 
@@ -15,8 +15,8 @@ var choose;
 
 // u is Unit
 var u = {
-  w: 100,
-  h: 100
+  w: 60,
+  h: 60
 }
 
 // c is for canvas
@@ -33,7 +33,7 @@ var grid = {
   x: 0,
   y: 0,
   step: 0,
-  num: 2
+  num: 4
 }
 
 // color variables
@@ -52,19 +52,17 @@ function setup() {
     c.width = windowHeight-windowHeight/5;
     c.height = c.width;
   }
+  refreshGrid();
+
   createCanvas(c.width, c.height);
-  frameRate(1);
-  noFill();
-  stroke(col.s);
-  strokeWeight(3);
-  strokeJoin(ROUND);
+  frameRate(4);
+
   background(col.bgnd);
 }
 
 function draw() {
   // background(col.bgnd);
-  refreshGrid();
-
+  clearPos();
   drawFigures();
   drawCircles();
   movePos();
@@ -75,13 +73,22 @@ function refreshGrid() {
   grid.startY = c.height/6;
   grid.stopX = c.width - c.width/6;
   grid.stopY = c.height - c.height/6;
+  grid.x = grid.startX;
+  grid.y = grid.startY;
   grid.step = (grid.stopX-grid.startX-u.w) / grid.num;
   if ((grid.step < u.w) || (grid.step < u.h)) {
-    grid.step = (u.w+u.h)/2
+    u.w = grid.step-20;
+    u.h = grid.step-20;
   }
 }
 
 function drawFigures() {
+  // STYLING
+  noFill();
+  stroke(col.s);
+  strokeWeight(3);
+  strokeJoin(ROUND);
+
   beginShape();
   ln.num = round(random(ln.min, ln.max));
 
@@ -132,6 +139,14 @@ function movePos() {
   }
 }
 
+function clearPos() {
+  noStroke();
+  fill(col.bgnd);
+  let bleed = 2;
+  rect(grid.x-bleed, grid.y-bleed, u.w+bleed*2, u.h+bleed*2);
+  noFill();
+}
+
 function windowResized() {
   // make canvas square
   if (windowWidth < windowHeight) {
@@ -142,5 +157,6 @@ function windowResized() {
     c.height = c.width;
   }
   resizeCanvas(c.width, c.height);
+  refreshGrid();
   background(col.bgnd);
 }
