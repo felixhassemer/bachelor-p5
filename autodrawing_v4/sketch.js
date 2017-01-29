@@ -50,10 +50,16 @@ function draw() {
   translate(canvas.width/2, canvas.height/2);
 
   // map audio level to size - setSize(max)
-  obj.setSize(200);
+  obj.setSize(500);
 
   // calculate Target point - setTarget(border)
   obj.setTarget(80);
+
+  if (frameCount % 2 == 0) {
+    fill(col.f);
+  } else {
+    fill(0);
+  }
 
   // easing
   obj.ease(0.1);
