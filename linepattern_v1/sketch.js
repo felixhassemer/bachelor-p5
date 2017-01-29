@@ -8,7 +8,7 @@ var u = {
 }
 
 var col = {
-  bgnd: 255,
+  bgnd: 235,
   f: 0,
   s: 0
 }

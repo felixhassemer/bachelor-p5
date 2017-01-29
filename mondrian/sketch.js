@@ -14,7 +14,7 @@ function setup() {
   rect3 = canvasW/2;
 
   createCanvas(canvasW, canvasH);
-  background(255);
+  background(235);
   fill(255);
   noStroke();
   frameRate(4);
@@ -23,7 +23,7 @@ function setup() {
 
 function draw() {
   // draw the rectangles
-  fill(240);
+  fill(235);
   rect(random(canvasW), random(canvasH), random(rect1), random(rect1));
   fill(190, 90, 90);
   rect(random(canvasW), random(canvasH), random(rect2), random(rect2));
