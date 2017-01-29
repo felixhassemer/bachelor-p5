@@ -28,7 +28,7 @@ var s = {
 // ----------------------------------------------------------
 
 function preload() {
-  s.song = loadSound("data/everythingbefore.mp3");
+  s.song = loadSound("data/ificouldfeelagain.mp3");
 }
 
 function setup() {
@@ -50,7 +50,7 @@ function draw() {
   translate(canvas.width/2, canvas.height/2);
 
   // map audio level to size - setSize(max)
-  obj.setSize(500);
+  obj.setSize(300);
 
   // calculate Target point - setTarget(border)
   obj.setTarget(80);
