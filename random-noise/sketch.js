@@ -26,6 +26,8 @@ function setup() {
 function draw() {
   graphNoise();
   graphRandom();
+  // console.log(int(map(yR, 0, canvas.height, 0, 100)));
+  console.log(int(map(noise(xOff), 0, 1, 0, 100)));
 }
 
 function graphRandom() {
