@@ -7,12 +7,12 @@ var border = 0;
 
 // UNITS
 var u = {
-  wMin: 10,
-  wMax: 160,
-  hMin: 10,
-  hMax: 180,
-  w: 0,
-  h: 0
+  wMin: 50,
+  wMax: 50,
+  hMin: 50,
+  hMax: 50,
+  w: 200,
+  h: 200
 }
 
 // selects PATTERNS
@@ -45,7 +45,7 @@ var a = {
 var n = {
   x : {
     off: 0,
-    incr: 0.04
+    incr: 0.02
   },
   y : {
     off: 0,
@@ -69,27 +69,27 @@ var c = {
 
 // POSITION
 var p = {
-  x: 0,
-  y: 0
+  x: 400,
+  y: 200
 }
 
 // COLOR
 var col = {
-  bgnd: 255,
+  bgnd: 235,
   f: 0,
   s: 0
 }
 
 // STROKE
 var s = {
-  weight: 3,
+  weight: 4,
   off: 0,
   cap: 0,
   join: 0,
   choose: 0
 }
 
-// ------------------------------------ ----------------------
+// ----------------------------------------------------------
 
 function setup() {
   initPatterns();
@@ -97,18 +97,18 @@ function setup() {
   c.w = windowWidth-windowWidth/5;
   c.h = windowHeight-windowHeight/5;
 
+  // SETTINGS
+  createCanvas(c.w-border, c.h);
+  frameRate(20);
+  background(col.bgnd);
+
   // initialize Variables
   s.off = s.weight/2;
   s.cap = ROUND;
   s.join = ROUND;
 
-  u.w = int(random(u.wMin, u.wMax));
-  u.h = int(random(u.hMin, u.hMax));
-
-  // SETTINGS
-  createCanvas(c.w-border, c.h);
-  frameRate(20);
-  background(col.bgnd);
+  p.x = canvas.width/2-u.w/2;
+  p.y = canvas.height/4;
 }
 
 // ----------------------------------------------------------
@@ -125,38 +125,18 @@ function draw() {
   choose.max = max(a.val);
 
   // map noise to choose function
-  choose.main = map(noise(n.x.off), 0, 1, 0, choose.max);
-
-  // set Unit Width to random or until margin
-  if (dist(p.x, p.y, width, p.y) > u.wMax) {
-    u.w = round(random(u.wMin, u.wMax));
-  } else {
-    u.w = round(dist(p.x, p.y, width, p.y));
-  }
+  choose.main = map(noise(n.x.off), 0, 1, 0, 100);
 
   // sort patterns by value
-  patterns.sort(function(a, b){
-    return a.value-b.value
-  })
+  patterns.sort(byValue);
 
   // selects Function according to pattern.name
+  graphNoise();
   chooseFunction();
-
-  // Paragraph Overflow or move X
-  if (p.x + u.w > width-1) {
-    // random Unit Height
-    p.x = 0;
-    p.y += u.h;
-    u.h = round(random(u.hMin, u.hMax));
-  } else {
-    p.x += u.w;
-  }
 
   // NOISE increment
   n.x.off += n.x.incr;
   n.y.off += n.y.incr;
-
-  scrollScreen();
 }
 
 // ----------------------------------------------------------
@@ -179,42 +159,63 @@ function setPatternNoise() {
 }
 
 function chooseFunction() {
+  var foundOne = false;
   for (let i=0; i < patterns.length; i++) {
-    var foundOne = false;
     if (choose.main < patterns[i].value) {
       if (patterns[i].name == "diagLine") {
         diagLine();
         foundOne = true;
-      }
-      if (patterns[i].name == "triangleDraw") {
+      } else if (patterns[i].name == "triangleDraw") {
         triangleDraw();
         foundOne = true;
-      }
-      if (patterns[i].name == "circle") {
+      } else if (patterns[i].name == "circle") {
         circle();
         foundOne = true;
-      }
-      if (patterns[i].name == "diagLine2") {
+      } else if (patterns[i].name == "diagLine2") {
         diagLine2();
         foundOne = true;
-      }
-      if (patterns[i].name == "horizontLines") {
+      } else if (patterns[i].name == "horizontLines") {
         horizontLines();
         foundOne = true;
-      }
-      if (patterns[i].name == "sineWave") {
+      } else if (patterns[i].name == "sineWave") {
         sineWave();
         foundOne = true;
-      }
-      if (patterns[i].name == "space") {
+      } else if (patterns[i].name == "space") {
         space();
         foundOne = true;
-      }
-      if (patterns[i].name == "curves") {
+      } else if (patterns[i].name == "curves") {
         curves();
         foundOne = true;
+      } else if (patterns[i].name == "lineFigures") {
+        lineFigures();
+        foundOne = true;
       }
-      if (patterns[i].name == "lineFigures") {
+    } else if (choose.main > choose.max) {
+      if (patterns[0].name == "diagLine") {
+        diagLine();
+        foundOne = true;
+      } else if (patterns[0].name == "triangleDraw") {
+        triangleDraw();
+        foundOne = true;
+      } else if (patterns[0].name == "circle") {
+        circle();
+        foundOne = true;
+      } else if (patterns[0].name == "diagLine2") {
+        diagLine2();
+        foundOne = true;
+      } else if (patterns[0].name == "horizontLines") {
+        horizontLines();
+        foundOne = true;
+      } else if (patterns[0].name == "sineWave") {
+        sineWave();
+        foundOne = true;
+      } else if (patterns[0].name == "space") {
+        space();
+        foundOne = true;
+      } else if (patterns[0].name == "curves") {
+        curves();
+        foundOne = true;
+      } else if (patterns[0].name == "lineFigures") {
         lineFigures();
         foundOne = true;
       }
@@ -225,14 +226,30 @@ function chooseFunction() {
   }
 }
 
-function scrollScreen() {
-  if (p.y + u.h >= height) {
-    copy(window, 0, 0, width, p.y, 0, -u.h, width, p.y);
-    fill(col.bgnd);
-    noStroke();
-    rect(0, p.y - u.h, width, u.hMax);
-    p.y = p.y - int(u.h);
+function byValue(a, b) {
+  return a.value-b.value;
+}
+
+function graphNoise() {
+  background(col.bgnd);
+  stroke(col.s);
+  strokeWeight(s.weight);
+  strokeCap(s.cap);
+  strokeJoin(s.join);
+  noFill();
+
+  let long = 50;
+  let y = canvas.height-canvas.height/5;
+  line(canvas.width/5, y, canvas.width-canvas.width/5, y);
+  for (let i=0; i<patterns.length; i++) {
+    let x = map(patterns[i].value, 0, 100, canvas.width/5, canvas.width-canvas.width/5);
+    line(x, y-long, x, y);
   }
+  fill(255,0,0);
+  noStroke();
+  let dotX = map(choose.main, 0, 100, canvas.width/5, canvas.width-canvas.width/5);
+  let dotY = y - 90;
+  ellipse(dotX, dotY, 20, 20);
 }
 
 function windowResized() {
@@ -240,6 +257,9 @@ function windowResized() {
   c.h = windowHeight-windowHeight/5;
 
   resizeCanvas(c.w-border, c.h);
+
+  p.x = canvas.width/2 - u.w/2;
+  p.y = canvas.height/4;
   background(col.bgnd);
 }
 

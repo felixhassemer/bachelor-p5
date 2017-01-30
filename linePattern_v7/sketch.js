@@ -3,14 +3,14 @@
 
 // VARIABLES
 // ----------------------------------------------------------
-var border = 300;
+var border = 200;
 
 // UNITS
 var u = {
   wMin: 10,
-  wMax: 160,
+  wMax: 200,
   hMin: 10,
-  hMax: 180,
+  hMax: 200,
   w: 0,
   h: 0
 }
@@ -23,7 +23,7 @@ var choose = {
 }
 
 // PATTERNS
-var names = [ 
+var names = [
               "diagLine",
               "triangleDraw",
               "circle",
@@ -69,9 +69,9 @@ var p = {
 
 // COLOR
 var col = {
-  bgnd: 255,
-  f: 0,
-  s: 0
+  bgnd: 0,
+  f: 255,
+  s: 255
 }
 
 // STROKE
@@ -116,7 +116,7 @@ function draw() {
   choose.max = max(a.val);
 
   // map noise to choose function
-  choose.main = map(noise(n.x.off), 0, 1, 0, choose.max);
+  choose.main = map(noise(n.x.off), 0, 1, 0, 100);
 
   // set Unit Width to random or until margin
   if (dist(p.x, p.y, width, p.y) > u.wMax) {
@@ -206,6 +206,35 @@ function chooseFunction() {
         foundOne = true;
       }
       if (patterns[i].name == "lineFigures") {
+        lineFigures();
+        foundOne = true;
+      }
+    } else if (choose.main > choose.max) {
+      if (patterns[0].name == "diagLine") {
+        diagLine();
+        foundOne = true;
+      } else if (patterns[0].name == "triangleDraw") {
+        triangleDraw();
+        foundOne = true;
+      } else if (patterns[0].name == "circle") {
+        circle();
+        foundOne = true;
+      } else if (patterns[0].name == "diagLine2") {
+        diagLine2();
+        foundOne = true;
+      } else if (patterns[0].name == "horizontLines") {
+        horizontLines();
+        foundOne = true;
+      } else if (patterns[0].name == "sineWave") {
+        sineWave();
+        foundOne = true;
+      } else if (patterns[0].name == "space") {
+        space();
+        foundOne = true;
+      } else if (patterns[0].name == "curves") {
+        curves();
+        foundOne = true;
+      } else if (patterns[0].name == "lineFigures") {
         lineFigures();
         foundOne = true;
       }
