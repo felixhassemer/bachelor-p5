@@ -6,7 +6,7 @@
 var border = 200;
 
 var sliders = {
-  border: 120,
+  border: 80,
   wMin: null,
   wMax: null,
   hMin: null,
@@ -103,10 +103,10 @@ function setup() {
   s.join = ROUND;
 
   // initialize Sliders
-  sliders.wMin = createSlider(0, 300, 80);
-  sliders.wMax = createSlider(0, 300, 80);
-  sliders.hMin = createSlider(0, 300, 80);
-  sliders.hMax = createSlider(0, 300, 80);
+  sliders.wMin = createSlider(0, 300, 100);
+  sliders.wMax = createSlider(0, 300, 101);
+  sliders.hMin = createSlider(0, 300, 100);
+  sliders.hMax = createSlider(0, 300, 101);
   sliders.mainChoose = createSlider(0, 100, 50);
 
   u.w = int(random(u.wMin, u.wMax));
