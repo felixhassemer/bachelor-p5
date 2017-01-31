@@ -5,6 +5,15 @@
 // ----------------------------------------------------------
 var border = 200;
 
+var sliders = {
+  border: 120,
+  wMin: null,
+  wMax: null,
+  hMin: null,
+  hMax: null,
+  mainChoose: null
+}
+
 // UNITS
 var u = {
   wMin: 10,
@@ -93,11 +102,18 @@ function setup() {
   s.cap = ROUND;
   s.join = ROUND;
 
+  // initialize Sliders
+  sliders.wMin = createSlider(0, 300, 80);
+  sliders.wMax = createSlider(0, 300, 80);
+  sliders.hMin = createSlider(0, 300, 80);
+  sliders.hMax = createSlider(0, 300, 80);
+  sliders.mainChoose = createSlider(0, 100, 50);
+
   u.w = int(random(u.wMin, u.wMax));
   u.h = int(random(u.hMin, u.hMax));
 
   // SETTINGS
-  createCanvas(windowWidth-border, windowHeight);
+  createCanvas(windowWidth-border, windowHeight-sliders.border);
   frameRate(20);
   background(col.bgnd);
 }
@@ -105,6 +121,7 @@ function setup() {
 // ----------------------------------------------------------
 
 function draw() {
+  refreshSliders();
   // Assign noise to Array values
   setPatternNoise();
 
@@ -255,8 +272,23 @@ function scrollScreen() {
   }
 }
 
+function refreshSliders() {
+  u.wMin = sliders.wMin.value();
+  u.wMax = sliders.wMax.value();
+  u.hMin = sliders.hMin.value();
+  u.hMax = sliders.hMax.value();
+  n.x.incr = sliders.mainChoose.value()/1000;
+
+  sliders.wMin.position(50, windowHeight-windowHeight/16);
+  sliders.wMax.position(200, windowHeight-windowHeight/16);
+  sliders.hMin.position(350, windowHeight-windowHeight/16);
+  sliders.hMax.position(500, windowHeight-windowHeight/16);
+  sliders.mainChoose.position(900, windowHeight-windowHeight/16);
+
+}
+
 function windowResized() {
-  resizeCanvas(windowWidth-border, windowHeight);
+  resizeCanvas(windowWidth-border, windowHeight-sliders.border);
   background(col.bgnd);
 }
 
