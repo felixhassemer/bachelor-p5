@@ -41,7 +41,7 @@ function setup() {
   frameRate(fr);
 
   s.song.play();
-  s.amp = new p5.Amplitude(0);
+  s.amp = new p5.Amplitude(0.01 );
   s.amp.toggleNormalize(1);
 
   stroke(col.s);
