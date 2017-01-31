@@ -3,11 +3,14 @@
 // GLOBAL variables
 
 var smoothCorner = 5;
+var colorToggle = false;
+var hsbMod = 1;
+var satMod = 100;
 
 var col = {
   bgnd: 0,
-  f: 255,
-  s: 0
+  f: 100,
+  s: 100
 }
 
 var fr = 60;
@@ -28,20 +31,21 @@ var s = {
 // ----------------------------------------------------------
 
 function preload() {
-  s.song = loadSound("data/ificouldfeelagain.mp3");
+  s.song = loadSound("data/bouncin.mp3");
 }
 
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100);
   background(col.bgnd);
   frameRate(fr);
 
   s.song.play();
-  s.amp = new p5.Amplitude(0.1);
+  s.amp = new p5.Amplitude(0);
   s.amp.toggleNormalize(1);
 
   stroke(col.s);
-  strokeWeight(1);
+  strokeWeight(2);
   rectMode(CENTER);
   fill(col.f);
 }
@@ -49,17 +53,17 @@ function setup() {
 function draw() {
   translate(canvas.width/2, canvas.height/2);
 
+  if (colorToggle) {
+    cycleColor();
+  } else {
+    blackWhite();
+  }
+
   // map audio level to size - setSize(max)
   obj.setSize(300);
 
   // calculate Target point - setTarget(border)
   obj.setTarget(80);
-
-  if (frameCount % 2 == 0) {
-    fill(col.f);
-  } else {
-    fill(0);
-  }
 
   // easing
   obj.ease(0.1);
@@ -95,9 +99,11 @@ var obj = {
     if ((mirror === undefined) || (mirror != -1)) {
       mirror = 1;
     }
-    if (s.vol < 0.2) {
-      ellipse(mirror*obj.xPos, mirror*obj.yPos, 5, 5);
-    } else if (s.vol < 0.7) {
+    if (s.vol < 0.4) {
+      fill(col.f);
+      stroke(col.bgnd);
+      ellipse(mirror*obj.xPos, mirror*obj.yPos, 8, 8);
+    } else if (s.vol < 0.9) {
       ellipse(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size);
     } else {
       rect(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size, smoothCorner);
@@ -111,6 +117,34 @@ var obj = {
     }
   }
 
+}
+
+function blackWhite() {
+  if (frameCount % 2 == 0) {
+    fill(col.f);
+    stroke(col.bgnd);
+  } else {
+    fill(col.bgnd);
+    stroke(col.f);
+  }
+}
+
+function cycleColor() {
+  col.s = color(hsbMod, satMod, 100);
+  col.f = col.bgnd;
+  if (frameCount % 6 == 1) {
+    hsbMod += 1;
+    if (hsbMod == 360) {
+      hsbMod = 1;
+    }
+  }
+}
+
+function keyPressed() {
+  if (keyCode == 32) {
+    background(col.bgnd);
+    colorToggle != colorToggle;
+  }
 }
 
 function clearScreen(beats) {
