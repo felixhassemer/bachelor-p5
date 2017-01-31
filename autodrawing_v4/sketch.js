@@ -4,8 +4,6 @@
 
 var smoothCorner = 5;
 var colorToggle = false;
-var hsbMod = 1;
-var satMod = 100;
 
 // WINDOW
 var w = {
@@ -13,10 +11,18 @@ var w = {
   height: 1200
 }
 
-// COLOR
-var col = {
+// black and white
+var bw = {
   bgnd: 0,
   f: 100,
+  s: 0
+}
+
+var col = {
+  hueMod: 0,
+  satMod: 100,
+  bgnd: 0,
+  f: 0,
   s: 0
 }
 
@@ -51,11 +57,8 @@ function setup() {
   pixelDensity(display);
 
   colorMode(HSB, 360, 100, 100);
-  col.s = color(0, 0, 0);
-  col.bgnd = color(0, 0, 0);
-  col.f = color(0, 0, 100);
 
-  background(col.bgnd);
+  background();
 
   s.song.play();
   s.amp = new p5.Amplitude(0.01);
@@ -115,8 +118,8 @@ var obj = {
       mirror = 1;
     }
     if (s.vol < 0.4) {
-      fill(col.f);
-      stroke(col.bgnd);
+      fill();
+      stroke();
       ellipse(mirror*obj.xPos, mirror*obj.yPos, 8, 8);
     } else if (s.vol < 0.9) {
       ellipse(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size);
@@ -134,23 +137,18 @@ var obj = {
 }
 
 function blackWhite() {
-  col.s = color(0, 0, 0);
-  col.f = color(0, 0, 100);
 
   if (frameCount % 2 == 0) {
-    fill(col.f);
-    stroke(col.bgnd);
+    fill();
+    stroke();
   } else {
-    fill(col.bgnd);
-    stroke(col.f);
+    fill();
+    stroke();
   }
 }
 
 function cycleColor() {
   satMod = map(s.amp.getLevel(), 0, 1, 0, 100);
-  col.s = color(hsbMod, satMod, 100);
-  console.log(satMod, hsbMod);
-  fill(col.f);
   if (frameCount % 6 == 1) {
     hsbMod += 1;
     if (hsbMod == 360) {
@@ -161,14 +159,14 @@ function cycleColor() {
 
 function keyPressed() {
   if (keyCode == 32) {
-    background(col.bgnd);
+    background();
     colorToggle = !colorToggle;
   }
 }
 
 function clearScreen(beats) {
   if (frameCount % (s.oneBeat()*beats) == 0) {
-    background(col.bgnd);
+    background();
   }
 }
 
@@ -176,5 +174,5 @@ function windowResized() {
   w.width = windowWidth;
   w.height = windowHeight;
   resizeCanvas(w.width, w.height);
-  background(col.bgnd);
+  background();
 }
