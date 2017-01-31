@@ -7,15 +7,22 @@ var colorToggle = false;
 var hsbMod = 1;
 var satMod = 100;
 
+// WINDOW
+var w = {
+  width: 1920,
+  height: 1200
+}
+
+// COLOR
 var col = {
   bgnd: 0,
   f: 100,
-  s: 100
+  s: 0
 }
 
 var fr = 60;
 
-// s is sound
+// s is SOUND
 var s = {
   bpm: 120,
   song: null,
@@ -35,19 +42,27 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  colorMode(HSB, 360, 100, 100);
-  background(col.bgnd);
+  w.width = windowWidth;
+  w.height = windowHeight;
+  createCanvas(w.width, w.height);
   frameRate(fr);
+  // devicePixelScaling(false);
+  var display = displayDensity();
+  pixelDensity(display);
+
+  colorMode(HSB, 360, 100, 100);
+  col.s = color(0, 0, 0);
+  col.bgnd = color(0, 0, 0);
+  col.f = color(0, 0, 100);
+
+  background(col.bgnd);
 
   s.song.play();
-  s.amp = new p5.Amplitude(0.01 );
+  s.amp = new p5.Amplitude(0.01);
   s.amp.toggleNormalize(1);
 
-  stroke(col.s);
   strokeWeight(2);
   rectMode(CENTER);
-  fill(col.f);
 }
 
 function draw() {
@@ -116,10 +131,12 @@ var obj = {
       obj.yTarget = random(-canvas.height/2+border, canvas.height/2-border);
     }
   }
-
 }
 
 function blackWhite() {
+  col.s = color(0, 0, 0);
+  col.f = color(0, 0, 100);
+
   if (frameCount % 2 == 0) {
     fill(col.f);
     stroke(col.bgnd);
@@ -130,8 +147,10 @@ function blackWhite() {
 }
 
 function cycleColor() {
+  satMod = map(s.amp.getLevel(), 0, 1, 0, 100);
   col.s = color(hsbMod, satMod, 100);
-  col.f = col.bgnd;
+  console.log(satMod, hsbMod);
+  fill(col.f);
   if (frameCount % 6 == 1) {
     hsbMod += 1;
     if (hsbMod == 360) {
@@ -143,7 +162,7 @@ function cycleColor() {
 function keyPressed() {
   if (keyCode == 32) {
     background(col.bgnd);
-    colorToggle != colorToggle;
+    colorToggle = !colorToggle;
   }
 }
 
@@ -151,4 +170,11 @@ function clearScreen(beats) {
   if (frameCount % (s.oneBeat()*beats) == 0) {
     background(col.bgnd);
   }
+}
+
+function windowResized() {
+  w.width = windowWidth;
+  w.height = windowHeight;
+  resizeCanvas(w.width, w.height);
+  background(col.bgnd);
 }
