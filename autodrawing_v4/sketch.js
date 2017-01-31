@@ -30,7 +30,7 @@ var fr = 60;
 
 // s is SOUND
 var s = {
-  bpm: 120,
+  bpm: 90,
   song: null,
   amp: null,
   vol: null,
@@ -53,12 +53,12 @@ function setup() {
   createCanvas(w.width, w.height);
   frameRate(fr);
   // devicePixelScaling(false);
-  var display = displayDensity();
-  pixelDensity(display);
+  // var display = displayDensity();
+  // pixelDensity(display);
 
-  colorMode(HSB, 360, 100, 100);
+  colorMode(HSB);
 
-  background();
+  background(bw.bgnd);
 
   s.song.play();
   s.amp = new p5.Amplitude(0.01);
@@ -81,7 +81,7 @@ function draw() {
   obj.setSize(300);
 
   // calculate Target point - setTarget(border)
-  obj.setTarget(80);
+  obj.setTarget(150);
 
   // easing
   obj.ease(0.1);
@@ -118,9 +118,16 @@ var obj = {
       mirror = 1;
     }
     if (s.vol < 0.4) {
-      fill();
-      stroke();
-      ellipse(mirror*obj.xPos, mirror*obj.yPos, 8, 8);
+      if (colorToggle) {
+        col.f = color(col.hueMod, 100, 100);
+        fill(col.f);
+        noStroke();
+      } else {
+        bw.f = 100;
+        fill(100);
+        stroke(0);
+      }
+      ellipse(mirror*obj.xPos, mirror*obj.yPos, 12, 12);
     } else if (s.vol < 0.9) {
       ellipse(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size);
     } else {
@@ -137,36 +144,44 @@ var obj = {
 }
 
 function blackWhite() {
-
   if (frameCount % 2 == 0) {
-    fill();
-    stroke();
+    bw.f = 100;
+    bw.s = 0;
+    fill(bw.f);
+    stroke(bw.s);
   } else {
-    fill();
-    stroke();
+    bw.f = 0;
+    bw.s = 100;
+    fill(bw.f);
+    stroke(bw.s);
   }
 }
 
 function cycleColor() {
-  satMod = map(s.amp.getLevel(), 0, 1, 0, 100);
-  if (frameCount % 6 == 1) {
-    hsbMod += 1;
-    if (hsbMod == 360) {
-      hsbMod = 1;
+  col.satMod = map(s.amp.getLevel(), 0, 1, 0, 100);
+  col.f = color(col.hueMod, 0, 0);
+  col.s = color(col.hueMod, col.satMod, 100);
+  stroke(col.s);
+  fill(col.f);
+
+  if (frameCount % 3 == 1) {
+    col.hueMod += 1;
+    if (col.hueMod == 360) {
+      col.hueMod = 1;
     }
   }
 }
 
 function keyPressed() {
   if (keyCode == 32) {
-    background();
+    background(bw.bgnd);
     colorToggle = !colorToggle;
   }
 }
 
 function clearScreen(beats) {
   if (frameCount % (s.oneBeat()*beats) == 0) {
-    background();
+    background(bw.bgnd);
   }
 }
 
@@ -174,5 +189,5 @@ function windowResized() {
   w.width = windowWidth;
   w.height = windowHeight;
   resizeCanvas(w.width, w.height);
-  background();
+  background(bw.bgnd);
 }
