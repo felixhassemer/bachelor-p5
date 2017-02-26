@@ -4,11 +4,14 @@
 
 var smoothCorner = 5;
 var colorToggle = false;
+var saveCount = 0;
+var fileType = "png";
+
 
 // WINDOW
 var w = {
-  width: 1920,
-  height: 1200
+  width: 4724,
+  height: 3200
 }
 
 // black and white
@@ -48,9 +51,9 @@ function preload() {
 }
 
 function setup() {
-  w.width = windowWidth;
-  w.height = windowHeight;
-  createCanvas(w.width, w.height);
+  // w.width = windowWidth;
+  // w.height = windowHeight;
+  var c = createCanvas(w.width, w.height);
   frameRate(fr);
   // devicePixelScaling(false);
   // var display = displayDensity();
@@ -64,7 +67,7 @@ function setup() {
   s.amp = new p5.Amplitude(0.01);
   s.amp.toggleNormalize(1);
 
-  strokeWeight(2);
+  strokeWeight(7);
   rectMode(CENTER);
 }
 
@@ -78,7 +81,7 @@ function draw() {
   }
 
   // map audio level to size - setSize(max)
-  obj.setSize(300);
+  obj.setSize(600);
 
   // calculate Target point - setTarget(border)
   obj.setTarget(150);
@@ -127,7 +130,7 @@ var obj = {
         fill(100);
         stroke(0);
       }
-      ellipse(mirror*obj.xPos, mirror*obj.yPos, 12, 12);
+      ellipse(mirror*obj.xPos, mirror*obj.yPos, 24, 24);
     } else if (s.vol < 0.9) {
       ellipse(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size);
     } else {
@@ -172,6 +175,14 @@ function cycleColor() {
   }
 }
 
+function keyTyped() {
+  if (key === 's') {
+    saveCount ++;
+    var fileName = "autodrawing4-" + saveCount;
+    saveCanvas(fileName, fileType);
+  }
+}
+
 function keyPressed() {
   if (keyCode == 32) {
     background(bw.bgnd);
@@ -185,9 +196,9 @@ function clearScreen(beats) {
   }
 }
 
-function windowResized() {
-  w.width = windowWidth;
-  w.height = windowHeight;
-  resizeCanvas(w.width, w.height);
-  background(bw.bgnd);
-}
+// function windowResized() {
+//   w.width = windowWidth;
+//   w.height = windowHeight;
+//   resizeCanvas(w.width, w.height);
+//   background(bw.bgnd);
+// }
