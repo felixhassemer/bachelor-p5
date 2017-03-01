@@ -10,8 +10,8 @@ var fileType = "png";
 
 // WINDOW
 var w = {
-  width: 4724,
-  height: 3200
+  width: 1000,
+  height: 1000
 }
 
 // black and white
