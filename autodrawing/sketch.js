@@ -1,89 +1,143 @@
 "use strict";
 
 // global
-var y = 0;
-var x = 0;
-var easing = 0.02;
-var border = 50;
-var toggle = false;
+
+var saveCount = 0;
+var fileType = "png";
+
+// CANVAS
+var canv = {
+  custom: true,
+  width: 3000,
+  height: 3000
+}
+
+// p is Position
+var p = {
+  x: null,
+  y: null
+}
 
 var target = {
-  x: 500,
-  y: 500
+  x: null,
+  y: null
 }
 
 var col = {
-  bgnd: 235,
-  f: 235,
-  s: 0
+  bgnd: 0,
+  f: 0,
+  s: 255
 }
 
-// c is for Canvas
-var c = {
-  width: 600,
-  height: 600
+// b is border
+var b = {
+  w: null,
+  h: null
 }
 
+var style = {
+  sWeight: null,
+  rEdge: 5,
+  toggle: false
+}
 
+var easing = 0.02;
+
+// ----------------------------------------------------------
 
 function setup() {
-  if (windowWidth < windowHeight) {
-    c.height = windowWidth-windowWidth/5;
-    c.width = c.height;
-  } else {
-    c.width = windowHeight-windowHeight/5;
-    c.height = c.width;
+  if (!canv.custom) {
+    if (windowWidth < windowHeight) {
+      canv.height = windowWidth-windowWidth/5;
+      canv.width = canv.height;
+    } else {
+      canv.width = windowHeight-windowHeight/5;
+      canv.height = canv.width;
+    }
   }
 
-  createCanvas(c.width, c.height);
+  createCanvas(canv.width, canv.height);
+
+  // Initialize Variables
+  style.sWeight = round(canv.width/800);
+  b.w = canv.width/20;
+  b.h = canv.height/20;
+  target.x = canv.width/2;
+  target.y = canv.height/2;
+  p.x = canv.width/2;
+  p.y = canv.height/2;
+
+
   background(col.bgnd);
   frameRate(60);
-  strokeWeight(1);
+  strokeWeight(style.sWeight);
   stroke(col.s);
   fill(col.f);
   rectMode(CENTER);
 }
 
+// ----------------------------------------------------------
+
 function draw() {
   if (frameCount % 60 == 1) {
-    target.x = random(c.width-border*2) + border;
-    target.y = random(c.height-border*2) + border;
+    target.x = random(canv.width-b.w*2) + b.w;
+    target.y = random(canv.height-b.h*2) + b.h;
   }
 
-  var dx = target.x - x;
-  x += dx * easing;
+  var dx = target.x - p.x;
+  p.x += dx * easing;
 
-  var dy = target.y - y;
-  y += dy * easing;
+  var dy = target.y - p.y;
+  p.y += dy * easing;
 
   // toggle ellipse or rectangle shape
-
-
-  if (toggle) {
-    ellipse(x, y, winMouseX/10, winMouseY/10);
+  if (style.toggle) {
+    ellipse(p.x, p.y, winMouseX/10, winMouseY/10);
   } else {
-    rect(x, y, winMouseX/10, winMouseY/10);
+    rect(p.x, p.y, winMouseX/10, winMouseY/10);
   }
+}
 
-  // reset background if Spacebar is pressed
-  if ((keyIsPressed) && (keyCode == 32)) {
+// ----------------------------------------------------------
+
+function mouseClicked() {
+  style.toggle = !style.toggle;
+}
+
+function keyPressed() {
+  if (keyCode == 32) {
     background(col.bgnd);
   }
 }
 
-function mouseClicked() {
-  toggle = !toggle;
-  return false;
+function keyTyped() {
+  if (key === 's') {
+    saveCount ++;
+    var fileName = "autodrawing-" + saveCount;
+    console.log(fileName);
+    saveCanvas(fileName, fileType);
+  }
 }
 
 function windowResized() {
-  if (windowWidth < windowHeight) {
-    c.height = windowWidth-windowWidth/5;
-    c.width = c.height;
-  } else {
-    c.width = windowHeight-windowHeight/5;
-    c.height = c.width;
+  if (!canv.custom) {
+    if (windowWidth < windowHeight) {
+      canv.height = windowWidth-windowWidth/5;
+      canv.width = canv.height;
+    } else {
+      canv.width = windowHeight-windowHeight/5;
+      canv.height = canv.width;
+    }
+    resizeCanvas(canv.width, canv.height);
+    background(col.bgnd);
+
+    // Initialize Variables
+    style.sWeight = round(canv.width/800);
+    b.w = canv.width/20;
+    b.h = canv.height/20;
+    target.x = canv.width/2;
+    target.y = canv.height/2;
+    p.x = canv.width/2;
+    p.y = canv.height/2;
   }
-  resizeCanvas(c.width, c.height);
-  background(col.bgnd);
 }
