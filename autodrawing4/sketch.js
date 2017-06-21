@@ -10,6 +10,7 @@ var fileType = "png";
 
 // WINDOW
 var w = {
+  custom: false,
   width: 1000,
   height: 1000
 }
@@ -31,6 +32,9 @@ var col = {
 
 var fr = 60;
 
+// audio drag and drop
+var dropzone;
+
 // s is SOUND
 var s = {
   bpm: 90,
@@ -47,23 +51,31 @@ var s = {
 // ----------------------------------------------------------
 
 function preload() {
-  s.song = loadSound("data/bouncin.mp3");
+  // s.song = loadSound("data/bouncin.mp3");
 }
 
 function setup() {
-  // w.width = windowWidth;
-  // w.height = windowHeight;
+  if (!w.custom) {
+    w.width = windowWidth;
+    w.height = windowHeight;
+  }
+
   var c = createCanvas(w.width, w.height);
   frameRate(fr);
-  // devicePixelScaling(false);
-  // var display = displayDensity();
-  // pixelDensity(display);
+
+  // Handle Audio file
+  dropzone = select("#dropzone");
+  dropzone.dragOver(highlight);
+  dropzone.dragLeave(unhighlight);
+  dropzone.drop(gotFile, dropped);
 
   colorMode(HSB);
 
   background(bw.bgnd);
 
-  s.song.play();
+  if (s.song) {
+    s.song.play();
+  }
   s.amp = new p5.Amplitude(0.01);
   s.amp.toggleNormalize(1);
 
@@ -196,9 +208,38 @@ function clearScreen(beats) {
   }
 }
 
-// function windowResized() {
-//   w.width = windowWidth;
-//   w.height = windowHeight;
-//   resizeCanvas(w.width, w.height);
-//   background(bw.bgnd);
-// }
+function windowResized() {
+  w.width = windowWidth;
+  w.height = windowHeight;
+  resizeCanvas(w.width, w.height);
+  background(bw.bgnd);
+}
+
+function highlight() {
+  dropzone.style("border-width", "10px");
+  dropzone.style("font-weight", "bold");
+}
+
+function unhighlight() {
+  dropzone.style("border-width", "2px");
+  dropzone.style("font-weight", "normal")
+}
+
+function dropped() {
+  dropzone.style("display", "none");
+}
+
+function gotFile(file) {
+  console.log(file.type);
+  s.song = loadSound(file.data, isloaded, iserror);
+}
+
+function isloaded() {
+  s.song.play();
+}
+
+function iserror() {
+  dropzone.style("display", "block");
+  unhighlight();
+  alert("Not the right format! Please use .mp3 if possible");
+}
