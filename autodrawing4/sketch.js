@@ -15,6 +15,12 @@ var w = {
   height: 1000
 }
 
+// environment variables
+var env = {
+  border: 150,
+  maxSize: 400
+}
+
 // black and white
 var bw = {
   bgnd: 0,
@@ -37,7 +43,7 @@ var dropzone;
 
 // s is SOUND
 var s = {
-  bpm: 90,
+  bpm: 120,
   song: null,
   amp: null,
   vol: null,
@@ -50,10 +56,6 @@ var s = {
 
 // ----------------------------------------------------------
 
-function preload() {
-  // s.song = loadSound("data/bouncin.mp3");
-}
-
 function setup() {
   if (!w.custom) {
     w.width = windowWidth;
@@ -62,6 +64,10 @@ function setup() {
 
   var c = createCanvas(w.width, w.height);
   frameRate(fr);
+
+  // set maxsize and borders
+  env.maxSize = (w.width + w.height) / 6;
+  env.borders = (w.width + w.height) / 12;
 
   // Handle Audio file
   dropzone = select("#dropzone");
@@ -73,18 +79,15 @@ function setup() {
 
   background(bw.bgnd);
 
-  if (s.song) {
-    s.song.play();
-  }
   s.amp = new p5.Amplitude(0.01);
   s.amp.toggleNormalize(1);
 
-  strokeWeight(7);
+  strokeWeight(3);
   rectMode(CENTER);
 }
 
 function draw() {
-  translate(canvas.width/2, canvas.height/2);
+  translate(w.width/2, w.height/2);
 
   if (colorToggle) {
     cycleColor();
@@ -93,10 +96,10 @@ function draw() {
   }
 
   // map audio level to size - setSize(max)
-  obj.setSize(600);
+  obj.setSize(env.maxSize);
 
   // calculate Target point - setTarget(border)
-  obj.setTarget(150);
+  obj.setTarget(env.borders);
 
   // easing
   obj.ease(0.1);
@@ -143,7 +146,7 @@ var obj = {
         stroke(0);
       }
       ellipse(mirror*obj.xPos, mirror*obj.yPos, 24, 24);
-    } else if (s.vol < 0.9) {
+    } else if (s.vol < 0.85) {
       ellipse(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size);
     } else {
       rect(mirror*obj.xPos, mirror*obj.yPos, obj.size, obj.size, smoothCorner);
@@ -187,13 +190,13 @@ function cycleColor() {
   }
 }
 
-function keyTyped() {
-  if (key === 's') {
-    saveCount ++;
-    var fileName = "autodrawing4-" + saveCount;
-    saveCanvas(fileName, fileType);
-  }
-}
+// function keyTyped() {
+//   if (key === 's') {
+//     saveCount ++;
+//     var fileName = "autodrawing4-" + saveCount;
+//     saveCanvas(fileName, fileType);
+//   }
+// }
 
 function keyPressed() {
   if (keyCode == 32) {
@@ -212,30 +215,41 @@ function windowResized() {
   w.width = windowWidth;
   w.height = windowHeight;
   resizeCanvas(w.width, w.height);
+
+  // set maxsize and borders
+  env.maxSize = (w.width + w.height) / 6;
+  env.borders = (w.width + w.height) / 12;
+
+  // clear background
   background(bw.bgnd);
 }
 
+// FUNCTIONS for drag and drop of audio files
 function highlight() {
   dropzone.style("border-width", "10px");
-  dropzone.style("font-weight", "bold");
 }
 
 function unhighlight() {
   dropzone.style("border-width", "2px");
-  dropzone.style("font-weight", "normal")
 }
 
 function dropped() {
   dropzone.style("display", "none");
 }
 
+function showDropzone() {
+  dropzone.style("display", "block");
+  unhighlight();
+}
+
 function gotFile(file) {
-  console.log(file.type);
+  // console.log(file.type);
   s.song = loadSound(file.data, isloaded, iserror);
 }
 
 function isloaded() {
   s.song.play();
+  s.song.onended(showDropzone);
 }
 
 function iserror() {
