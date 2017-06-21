@@ -1,14 +1,9 @@
-var border = 300;
-var sWeight = 10;
+var border = 50;
+var sWeight = 2;
 
 var arcs = {
   space: null,
   diam: null
-}
-
-var w = {
-  width: 4200,
-  height: 4200
 }
 
 var col = {
@@ -18,48 +13,49 @@ var col = {
 
 
 function setup() {
-  arcs.diam = w.width / 10;
-  arcs.space = w.width / 13;
-  // createCanvas(windowWidth, windowHeight);
-  // background(153, 37, 68);
-  createCanvas(w.width, w.height);
+  createCanvas(windowWidth, windowHeight);
+  arcs.diam = canvas.width / 10;
+  arcs.space = canvas.width / 13;
   background(col.bgnd);
   frameRate(60);
   colorMode(RGB);
   noFill();
   stroke(col.s);
-  // stroke(47, 214, 169);
   strokeWeight(sWeight);
 }
 
 function draw() {
   background(col.bgnd);
+  translate(arcs.diam/4, arcs.diam/4);
 
-  var arcStart = radians(map(mouseX, 0, w.width, 0, 360));
-  var arcStop = radians(map(mouseY, 0, w.height, 0, 360));
+  var arcStart = radians(map(mouseX, 0, canvas.width, 0, 360));
+  var arcStop = radians(map(mouseY, 0, canvas.height, 0, 360));
 
   if (arcStart < arcStop) {
-    for (let x = border; x < w.width-border; x+=arcs.space) {
-      for (let y = border; y < w.height-border; y+=arcs.space) {
+    for (let x = border; x < canvas.width-border; x+=arcs.space) {
+      for (let y = border; y < canvas.height-border; y+=arcs.space) {
         arc(x, y, arcs.diam, arcs.diam, arcStart, arcStop, OPEN);
       }
     }
   }
   if (arcStart > arcStop) {
-    for (let x = border; x < w.width-border; x+=arcs.space) {
-      for (let y = border; y < w.height-border; y+=arcs.space) {
+    for (let x = border; x < canvas.width-border; x+=arcs.space) {
+      for (let y = border; y < canvas.height-border; y+=arcs.space) {
         arc(x, y, arcs.diam, arcs.diam, arcStop, arcStart, OPEN);
       }
     }
   }
 }
 
-// function windowResized() {
-//   resizeCanvas(windowWidth, windowHeight);
-// }
-
-function keyTyped() {
-  if (key === 's') {
-    saveCanvas('floweroflife', 'png');
-  }
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  border = windowWidth / 10;
+  arcs.diam = canvas.width / 10;
+  arcs.space = canvas.width / 13;
 }
+
+// function keyTyped() {
+//   if (key === 's') {
+//     saveCanvas('floweroflife', 'png');
+//   }
+// }
