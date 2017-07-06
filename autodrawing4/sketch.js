@@ -1,4 +1,6 @@
 "use strict";
+p5.disableFriendlyErrors = true;
+
 
 // GLOBAL variables
 

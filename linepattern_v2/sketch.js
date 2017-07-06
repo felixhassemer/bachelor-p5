@@ -1,4 +1,7 @@
 // Global Variables
+"use strict";
+p5.disableFriendlyErrors = true;
+
 
 var x = 0,
     y = 0;

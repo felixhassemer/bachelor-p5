@@ -1,3 +1,7 @@
+"use strict";
+p5.disableFriendlyErrors = true;
+
+
 var border = 50;
 var sWeight = 2;
 

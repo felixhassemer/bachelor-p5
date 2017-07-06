@@ -1,5 +1,8 @@
+"use strict";
+
 var canvasW, canvasH;
 var rect1, rect2, rect3;
+p5.disableFriendlyErrors = true;
 
 
 

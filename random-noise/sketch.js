@@ -1,4 +1,6 @@
 "use strict";
+p5.disableFriendlyErrors = true;
+
 
 var xR=0, yR=0;
 var xN=0, yN=0;

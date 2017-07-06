@@ -1,3 +1,8 @@
+"use strict";
+p5.disableFriendlyErrors = true;
+
+
+// GLOBAL VARS
 var x = 0,
     y = 0;
 

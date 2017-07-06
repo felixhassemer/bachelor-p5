@@ -1,5 +1,6 @@
 // enable strict mode
 "use strict";
+p5.disableFriendlyErrors = true;
 
 // VARIABLES
 // ----------------------------------------------------------
