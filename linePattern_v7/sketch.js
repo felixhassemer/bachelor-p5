@@ -123,8 +123,8 @@ function draw() {
 
   // sort patterns by value
   patterns.sort(function(a, b){
-    return a.value-b.value
-  })
+    return a.value-b.value;
+  });
 
   // map noise to choose function
   choose.main = map(noise(n.x.off), 0, 1, 0, 100);
