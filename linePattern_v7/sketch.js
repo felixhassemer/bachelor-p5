@@ -32,18 +32,6 @@ var choose = {
 }
 
 // PATTERNS
-var names = [
-  "diagLine",
-  "triangleDraw",
-  "circle",
-  "diagLine2",
-  "horizontLines",
-  "lineFigures",
-  "sineWave",
-  "curves",
-  "space"
-];
-
 var functArray = [
   diagLine,
   triangleDraw,
@@ -57,11 +45,6 @@ var functArray = [
 ];
 
 var patterns = [];
-
-// ARRAY
-var a = {
-  val: []
-}
 
 // NOISE
 var n = {
