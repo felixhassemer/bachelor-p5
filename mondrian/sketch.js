@@ -1,10 +1,8 @@
 "use strict";
+p5.disableFriendlyErrors = true;
 
 var canvasW, canvasH;
 var rect1, rect2, rect3;
-p5.disableFriendlyErrors = true;
-
-
 
 function setup() {
   // calculate canvassize
@@ -20,7 +18,7 @@ function setup() {
   background(235);
   fill(255);
   noStroke();
-  frameRate(4);
+  frameRate(3);
   rectMode(CENTER);
 }
 
@@ -35,15 +33,5 @@ function draw() {
 }
 
 function windowResized() {
-    // calculate canvassize
-  canvasW = windowWidth-windowWidth/4;
-  canvasH = windowHeight-windowHeight/4;
-
-  resizeCanvas(canvasW, canvasH);
-
-  // rectangle sizes
-  rect1 = canvasW/2;
-  rect2 = canvasW/3;
-  rect3 = canvasW/2;
-  background(255);
+  setup();
 }

@@ -150,15 +150,5 @@ function clearPos() {
 }
 
 function windowResized() {
-  // make canvas square
-  if (windowWidth < windowHeight) {
-    c.height = windowWidth-windowWidth/5;
-    c.width = c.height;
-  } else {
-    c.width = windowHeight-windowHeight/5;
-    c.height = c.width;
-  }
-  resizeCanvas(c.width, c.height);
-  refreshGrid();
-  background(col.bgnd);
+  setup();
 }

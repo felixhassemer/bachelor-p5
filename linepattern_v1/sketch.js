@@ -20,9 +20,11 @@ var col = {
 
 
 function setup() {
-  createCanvas(windowWidth/3+20, windowHeight);
+  createCanvas(windowWidth/2+20, windowHeight);
   frameRate(45);
   background(col.bgnd);
+  x = 0,
+  y = 0;
 
   stroke(col.s);
   strokeWeight(5);
@@ -44,7 +46,7 @@ function diagLine() {
     line(x, y+u.h, x+u.w, y);
   }
   x+=u.w;
-  if (x+u.w > windowWidth/3) {
+  if (x+u.w > windowWidth/2) {
     y+=u.h;
     x=0;
   }
@@ -55,8 +57,5 @@ function diagLine() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth/3+20, windowHeight);
-  background(col.bgnd);
-  x=0;
-  y=0;
+  setup();
 }

@@ -62,6 +62,7 @@ function setup() {
 
   // Initialize Variables
   style.sWeight = round(canv.width/600);
+  if (style.sWeight < 1) style.sWeight = 1;
   b.w = canv.width/30;
   b.h = canv.height/30;
   target.x = canv.width/2;
@@ -122,24 +123,5 @@ function keyTyped() {
 }
 
 function windowResized() {
-  if (!canv.custom) {
-    if (windowWidth < windowHeight) {
-      canv.height = windowWidth-windowWidth/8;
-      canv.width = canv.height;
-    } else {
-      canv.width = windowHeight-windowHeight/8;
-      canv.height = canv.width;
-    }
-    resizeCanvas(canv.width, canv.height);
-    background(col.bgnd);
-
-    // Initialize Variables
-    style.sWeight = round(canv.width/600);
-    b.w = canv.width/30;
-    b.h = canv.height/30;
-    target.x = canv.width/2;
-    target.y = canv.height/2;
-    p.x = canv.width/2;
-    p.y = canv.height/2;
-  }
+  setup();
 }

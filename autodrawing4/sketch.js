@@ -192,13 +192,13 @@ function cycleColor() {
   }
 }
 
-// function keyTyped() {
-//   if (key === 's') {
-//     saveCount ++;
-//     var fileName = "autodrawing4-" + saveCount;
-//     saveCanvas(fileName, fileType);
-//   }
-// }
+function keyTyped() {
+  if (key === 's') {
+    saveCount ++;
+    var fileName = "autodrawing4-" + saveCount;
+    saveCanvas(fileName, fileType);
+  }
+}
 
 function keyPressed() {
   if (keyCode == 32) {
@@ -214,16 +214,7 @@ function clearScreen(beats) {
 }
 
 function windowResized() {
-  w.width = windowWidth;
-  w.height = windowHeight;
-  resizeCanvas(w.width, w.height);
-
-  // set maxsize and borders
-  env.maxSize = (w.width + w.height) / 6;
-  env.borders = (w.width + w.height) / 12;
-
-  // clear background
-  background(bw.bgnd);
+  setup();
 }
 
 // FUNCTIONS for drag and drop of audio files

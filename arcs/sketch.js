@@ -1,7 +1,6 @@
 "use strict";
 p5.disableFriendlyErrors = true;
 
-
 var border = 50;
 var sWeight = 2;
 
@@ -14,7 +13,6 @@ var col = {
   bgnd: 0,
   s: 255
 }
-
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -52,14 +50,5 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  border = windowWidth / 10;
-  arcs.diam = canvas.width / 10;
-  arcs.space = canvas.width / 13;
+  setup();
 }
-
-// function keyTyped() {
-//   if (key === 's') {
-//     saveCanvas('floweroflife', 'png');
-//   }
-// }

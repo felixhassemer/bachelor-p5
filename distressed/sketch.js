@@ -1,8 +1,6 @@
 "use strict";
 p5.disableFriendlyErrors = true;
 
-
-
 function setup() {
   createCanvas(windowWidth/2, windowWidth/2);
   background(0);
@@ -26,5 +24,5 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth/2, windowWidth/2);
+  setup();
 }

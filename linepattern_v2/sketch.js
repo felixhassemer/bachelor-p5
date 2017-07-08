@@ -26,8 +26,10 @@ var col = {
 // ---------------------------------------------------------
 
 function setup() {
-  createCanvas(windowWidth/3+20, windowHeight);
+  createCanvas(windowWidth/2+20, windowHeight);
   frameRate(45);
+  x = 0,
+  y = 0;
   background(col.bgnd);
 }
 
@@ -46,15 +48,12 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth/3+20, windowHeight);
-  background(col.bgnd);
-  x=0;
-  y=0;
+  setup();
 }
 
 function move() {
   x+=u.w;
-  if (x+u.w > windowWidth/3) {
+  if (x+u.w > windowWidth/2) {
     y+=u.h;
     x=0;
   }
