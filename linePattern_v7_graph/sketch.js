@@ -102,8 +102,8 @@ function setup() {
   c.h = windowHeight-windowHeight/5;
 
   // initialize sliders
-  sliders.mainNoise = createSlider(0, 50, 5);
-  sliders.patternNoise = createSlider(0, 50, 5);
+  sliders.mainNoise = createSlider(0, 15, 3);
+  sliders.patternNoise = createSlider(0, 15, 3);
 
   // initialize Variables
   s.off = s.weight/2;

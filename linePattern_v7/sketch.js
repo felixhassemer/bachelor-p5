@@ -104,7 +104,7 @@ function setup() {
   sliders.wMax = createSlider(0, 300, 41);
   sliders.hMin = createSlider(0, 300, 40);
   sliders.hMax = createSlider(0, 300, 41);
-  sliders.mainChoose = createSlider(0, 100, 15);
+  sliders.mainChoose = createSlider(0, 20, 4);
 
   u.w = int(random(u.wMin, u.wMax));
   u.h = int(random(u.hMin, u.hMax));
