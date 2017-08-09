@@ -9,6 +9,11 @@ var start = 0;
 var xincr = 0.02;
 var pDist = 3;
 
+var c = {
+  width: 800,
+  height: 800
+}
+
 var col = {
   bgnd: 235,
   f: 235,
@@ -17,7 +22,7 @@ var col = {
 
 
 function setup() {
-  createCanvas(windowWidth-windowWidth/4, windowHeight-windowHeight/4);
+  createCanvas(c.width, c.height);
   frameRate(30);
   strokeWeight(4);
   stroke(col.s);
@@ -27,30 +32,14 @@ function setup() {
 
 function draw() {
   graphNoise();
-  graphRandom();
 }
 
-function graphRandom() {
-  stroke(col.s);
-  noFill();
 
-  yR = floor(random(canvas.height));
-  point(xR-2, yR);
-  if (xR < canvas.width/2) {
-    xR+=pDist;
-  } else {
-    copy(window, 0, 0, canvas.width/2, canvas.height, -pDist, 0, canvas.width/2, canvas.height);
-    fill(col.f);
-    noStroke();
-    rect(canvas.width/2-pDist, 0, pDist, canvas.height);
-    xR = canvas.width/2-pDist;
-  }
-}
 
 function graphNoise() {
   noStroke();
   fill(col.f);
-  rect(canvas.width/2, 0, canvas.width/2, canvas.height);
+  rect(c.width/2, 0, c.width/2, c.height);
 
   noFill();
   stroke(col.s);
@@ -62,8 +51,4 @@ function graphNoise() {
     xOff += xincr;
   }
   start += xincr;
-}
-
-function windowResized() {
-  setup();
 }
